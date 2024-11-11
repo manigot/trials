@@ -8,9 +8,9 @@ dataset_names = ["train", "valid", "test"]
 
 
 def sub(file_name):
-    start_point = file_name.index("_") + 1
+    #start_point = file_name.index("_") + 1
     end_point = file_name.index(".")
-    symbol = file_name[start_point:end_point]
+    symbol = file_name[:end_point]
     return symbol
 
 
@@ -34,6 +34,23 @@ def form_all_time_points(
     in this list are in XXXX-YY-ZZ format of str type.
     """
     file_name = os.listdir(stock_data_path)
+    df = pd.read_csv(stock_data_path + file_name[0], encoding="gbk")
+    total_len = len(df)
+    first_split_idx = int(total_len * 0.6)
+    second_split_idx = first_split_idx + int(total_len * 0.2)
+    
+    df_train = df.iloc[:first_split_idx]
+    df_valid = df.iloc[first_split_idx:second_split_idx]
+    df_test = df.iloc[second_split_idx:]
+    time_points= [df_train.iloc[0].date,df_train.iloc[-1].date,
+        df_valid.iloc[-1].date, df_test.iloc[-1].date]
+    time_points = [
+        point.format("YYYY-MM-DD")
+        for point in time_points
+    ]
+    print(time_points)
+
+    """
     begin_time = pd.read_csv(
         stock_data_path + file_name[0], encoding="gbk"
     ).iloc[0]["date"]
@@ -52,6 +69,7 @@ def form_all_time_points(
             testing_end_time,
         ]
     ]
+    """
     return time_points
 
 

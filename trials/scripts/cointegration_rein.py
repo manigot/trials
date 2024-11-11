@@ -7,7 +7,7 @@ from stable_baselines3.common.utils import set_random_seed
 from train_trials import build_dataset, load_data, select_file_name
 
 import wandb
-from trials.networks.env import ReinforceTradingEnv
+from env import ReinforceTradingEnv
 
 
 def script(args):

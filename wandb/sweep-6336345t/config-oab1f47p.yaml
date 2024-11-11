@@ -1,0 +1,36 @@
+wandb_version: 1
+
+dropout:
+  value: 0
+ent-coef:
+  value: 0.1
+feature-extractor-hidden-dim:
+  value: 128
+feature-extractor-num-heads:
+  value: 4
+feature-extractor-num-layers:
+  value: 3
+learning-rate:
+  value: 6.0e-12
+policy-network-hidden-dim:
+  value: 256
+seed:
+  value: 5
+trading-dropout:
+  value: 0.1
+trading-ent-coef:
+  value: 0.6
+trading-feature-extractor-hidden-dim:
+  value: 64
+trading-feature-extractor-num-heads:
+  value: 4
+trading-feature-extractor-num-layers:
+  value: 1
+trading-learning-rate:
+  value: 0.0006
+trading-rl-gamma:
+  value: 0.8
+trading-train-steps:
+  value: 2000
+train-steps:
+  value: 5

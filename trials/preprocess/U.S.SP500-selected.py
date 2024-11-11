@@ -6,9 +6,9 @@ import typer
 
 
 def sub(file_name):
-    start_point = file_name.index("_") + 1
+    #start_point = file_name.index("_") + 1
     end_point = file_name.index(".")
-    symbol = file_name[start_point:end_point]
+    symbol = file_name[:end_point]
     return symbol
 
 
@@ -27,7 +27,7 @@ def select_stock_name(selected_symbol_path: str, stock_data_path: str) -> list:
     A list of all pending stock symbols.
     """
     df1 = pd.read_csv(selected_symbol_path)
-    result = df1["Symbol"].values.tolist()
+    result = df1["symbol"].values.tolist()
     file = os.listdir(stock_data_path)
     train = list(
         filter(lambda x: (x[-4:] == ".csv" and sub(x) in result), file)
@@ -70,7 +70,7 @@ def form_union_time(path_in: str, temp: list) -> list:
     time = []
     union_time = []
     for file in temp:
-        tmp = pd.read_csv(path_in + file, encoding="gbk")["时间"].values.tolist()
+        tmp = pd.read_csv(path_in + file, encoding="gbk")["Date"].values.tolist()
         time.append(tmp)
     for t in time:
         union_time = list(set(union_time).union(set(t)))
@@ -107,17 +107,19 @@ def stocks_output(
     """
     for file_name in stock_name:
         df = pd.read_csv(path_in + file_name, encoding="gbk")
-        stock_time = df["时间"].values.tolist()
+        stock_time = df["Date"].values.tolist()
         stock_time = select_stock_time(begin_time, end_time, stock_time)
+        print(file_name)
+        print(set(union_time).difference(set(stock_time)))
         if (set(stock_time)) == (set(union_time)):
             # Change the column name of the original data of each stock
             # to form a new table
             df.rename(
                 columns={
-                    "时间": "date",
-                    "开盘价(原始币种)": "open",
-                    "收盘价(原始币种)": "close",
-                    "成交量(股)": "volume",
+                    "Date": "date",
+                    "Open": "open",
+                    "Close": "close",
+                    "Volume": "volume",
                 },
                 inplace=True,
             )
@@ -125,6 +127,7 @@ def stocks_output(
                 (df["date"] >= begin_time) & (df["date"] <= end_time),
                 ["date", "open", "close", "volume"],
             ]
+            print(np.all(pd.notnull(dataframe)))
             # Determine if a stock has missing data
             if np.all(pd.notnull(dataframe)):
                 df2 = dataframe.astype(str)
@@ -134,8 +137,9 @@ def stocks_output(
                 close_price = df2["close"].values.tolist()
                 # Determine if a stock has an opening or closing price
                 # less than $1 on a trading day
-                if (all(float(i) >= 1 for i in open_price)) & (
-                    all(float(i) >= 1 for i in close_price)
+                print("yes")
+                if (all(float(i) >= 0 for i in open_price)) & (
+                    all(float(i) >= 0 for i in close_price)
                 ):
                     dataframe.to_csv(
                         store_path + file_name, index=False, encoding="gbk"

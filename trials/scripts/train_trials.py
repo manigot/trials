@@ -14,14 +14,14 @@ from stable_baselines3.common.vec_env import SubprocVecEnv
 from wandb.integration.sb3 import WandbCallback
 
 import wandb
-from trials.networks.callbacks import (
+from callbacks import (
     BestDevRewardCallback,
     EvalCallback,
     eval_reward_metric,
 )
-from trials.networks.env import ReinforceTradingEnv
-from trials.networks.feature_extractor import FEATURE_EXTRACTORS
-from trials.networks.policy_network import PairSelectionActorCriticPolicy
+from env import ReinforceTradingEnv
+from feature_extractor import FEATURE_EXTRACTORS
+from policy_network import PairSelectionActorCriticPolicy
 
 
 def load_data(path, file_name):
@@ -71,6 +71,7 @@ def build_dataset(train, valid, test, asset_number, feature_dim):
     )
 
     # T x N x M
+    print(train.values)
     train_value = train.values.astype(float).reshape(
         train_size, asset_number, feature_dim
     )
@@ -351,13 +352,13 @@ def train(args, run_id):
 def main(
     log_dir: str = "log",
     saved_model_dir: str = "saved_model",
-    rolling_dataset_path: str = "trials/data/",
+    rolling_dataset_path: str = "model_data/",
     policy: str = "simple_serial_selection",
     feature_extractor: str = "mlp",
     trading_feature_extractor: str = "lstm",
     asset_attention: bool = False,
-    rolling_serial: int = 1,
-    asset_num: int = 30,
+    rolling_serial: int = 4,
+    asset_num: int = 4,
     feature_dim: int = 3,
     feature_extractor_hidden_dim: int = 64,
     feature_extractor_num_layers: int = 1,

@@ -41,6 +41,7 @@ def form_random_symbol(
     rolling_serial_num = 1
     start_index = 0
     while rolling_serial_num <= rolling_num:
+        print("c")
         end_index = start_index + symbols_num_each_rolling
         random_symbol = stock_symbol[start_index:end_index]
         random_symbol.sort()
