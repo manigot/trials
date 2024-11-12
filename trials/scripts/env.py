@@ -605,8 +605,8 @@ class ReinforceTradingEnv(TradingEnv):
         :param y_index: (int) the selected second asset index
         """
         trading_indexes = [x_index, y_index]
-        self.train_env.set_attr("trading_indexes", trading_indexes)
-        self.test_env.set_attr("trading_indexes", trading_indexes)
+        self.train_env.__setattr__("trading_indexes", trading_indexes)
+        self.test_env.__setattr__("trading_indexes", trading_indexes)
 
     def step(self, action):
         """Reward according to action
